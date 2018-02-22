@@ -8,12 +8,17 @@ Using Mongoose ODM and Bluebird for Promises.
 
 - NoSQL CRUD API
 
-## Setup
+## Auth0 Setup
+See [this guide](https://auth0.com/docs/integrations/aws-api-gateway/custom-authorizers)
+
+## Application Setup
 
 ```
 npm install
 serverless deploy
 ```
+
+Rename `example.config.yml` to `config.yml` and add your MongoDB Atlas connection string to the `MONGO_URI` property
 
 ## Usage
 

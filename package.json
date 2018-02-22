@@ -1,13 +1,16 @@
 {
-  "name": "aws-node-restapi-mongodb",
+  "name": "service-name",
   "version": "1.0.0",
-  "description": "Serverless REST API with MongoDB using Mongoose and Bluebird",
+  "description": "Basic template for a RESTful API, using Auth0 custom authorizers, MongoDB Atlas and Serverless",
   "main": "handler.js",
   "dependencies": {
+    "auth0": "^2.5.0",
     "bluebird": "^3.5.0",
     "mongoose": "^4.9.6",
+    "jsonwebtoken": "^7.4.1",
+    "jwks-rsa": "^1.1.1",
     "validator": "^7.0.0"
   },
-  "author": "Quentin Homareau <quentin.homareau@gmail.com>",
+  "author": "Chris Chapman <chrischapman900@gmail.com>",
   "license": "MIT"
 }

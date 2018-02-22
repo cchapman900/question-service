@@ -1,8 +1,14 @@
-service: aws-node-rest-api-mongodb
+service: service-name
 
 provider:
   name: aws
   runtime: nodejs6.10
+  environment:
+    MONGO_URI: ${file(./config.yml):MONGO_URI}
+    JWKS_URI: ${file(./config.yml):JWKS_URI}
+    AUDIENCE: ${file(./config.yml):AUDIENCE}
+    TOKEN_ISSUER: ${file(./config.yml):TOKEN_ISSUER}
+    API_GATEWAY_ARN: ${file(./config.yml):API_GATEWAY_ARN}
 
 functions:
   createUser:
@@ -20,6 +26,12 @@ functions:
           path: user/{id}
           method: put
           cors: true
+          authorizer:
+            name: authenticate
+            resultTtlInSeconds: 3600
+            identitySource: method.request.header.Authorization
+            identityValidationExpression: '^Bearer [-0-9a-zA-z\.]*$'
+            type: token
 
   deleteUser:
     handler: handler.deleteUser
@@ -29,10 +41,13 @@ functions:
           method: delete
           cors: true
 
-  user:
-    handler: handler.user
+  getUser:
+    handler: handler.getUser
     events:
       - http:
           path: user/{id}
           method: get
           cors: true
+
+  authenticate:
+    handler: handler.authenticate
