@@ -1,7 +1,0 @@
-# MongoDB Atlas Config
-MONGO_URI: ''
-
-# Auth0 Config
-JWKS_URI: ''
-AUDIENCE: ''
-TOKEN_ISSUER: ''

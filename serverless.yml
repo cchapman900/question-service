@@ -1,4 +1,4 @@
-service: service-name
+service: question-service
 
 provider:
   name: aws
@@ -11,43 +11,52 @@ provider:
     API_GATEWAY_ARN: ${file(./config.yml):API_GATEWAY_ARN}
 
 functions:
-  createUser:
-    handler: handler.createUser
+
+  getQuestions:
+    handler: handler.getQuestion
     events:
       - http:
-          path: user
-          method: post
+          path: questions
+          method: get
           cors: true
 
-  updateUser:
-    handler: handler.updateUser
-    events:
-      - http:
-          path: user/{id}
-          method: put
-          cors: true
-          authorizer:
-            name: authenticate
-            resultTtlInSeconds: 3600
-            identitySource: method.request.header.Authorization
-            identityValidationExpression: '^Bearer [-0-9a-zA-z\.]*$'
-            type: token
-
-  deleteUser:
-    handler: handler.deleteUser
-    events:
-      - http:
-          path: user/{id}
-          method: delete
-          cors: true
-
-  getUser:
-    handler: handler.getUser
+  getQuestion:
+    handler: handler.getQuestion
     events:
       - http:
           path: user/{id}
           method: get
           cors: true
 
-  authenticate:
-    handler: handler.authenticate
+  createQuestion:
+    handler: handler.createQuestion
+    events:
+      - http:
+          path: questions
+          method: post
+          cors: true
+#          authorizer:
+#            name: authenticate
+#            resultTtlInSeconds: 3600
+#            identitySource: method.request.header.Authorization
+#            identityValidationExpression: '^Bearer [-0-9a-zA-z\.]*$'
+#            type: token
+
+  updateQuestion:
+    handler: handler.updateQuestion
+    events:
+      - http:
+          path: questions/{id}
+          method: put
+          cors: true
+
+  deleteQuestion:
+    handler: handler.deleteQuestion
+    events:
+      - http:
+          path: questions/{id}
+          method: delete
+          cors: true
+
+#  authenticate:
+#    handler: handler.authenticate

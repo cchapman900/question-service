@@ -1,5 +1,5 @@
 {
-  "name": "service-name",
+  "name": "question-service",
   "version": "1.0.0",
   "description": "Basic template for a RESTful API, using Auth0 custom authorizers, MongoDB Atlas and Serverless",
   "main": "handler.js",
