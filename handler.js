@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bluebird = require('bluebird');
 const validator = require('validator');
-const UserModel = require('./model/User.js');
+const Question = require('./model/Question.js');
 const auth = require('./auth');
 
 mongoose.Promise = bluebird;
@@ -24,7 +24,7 @@ module.exports.authenticate = function (event, context) {
     });
 };
 
-module.exports.getUser = (event, context, callback) => {
+module.exports.getQuestion = (event, context, callback) => {
   const db = mongoose.connect(mongoString).connection;
   const id = event.pathParameters.id;
 
@@ -35,10 +35,10 @@ module.exports.getUser = (event, context, callback) => {
   }
 
   db.once('open', () => {
-    UserModel
+    Question
       .find({ _id: event.pathParameters.id })
-      .then((user) => {
-        callback(null, { statusCode: 200, body: JSON.stringify(user) });
+      .then((question) => {
+        callback(null, { statusCode: 200, body: JSON.stringify(question) });
       })
       .catch((err) => {
         callback(null, createErrorResponse(err.statusCode, err.message));
@@ -51,38 +51,38 @@ module.exports.getUser = (event, context, callback) => {
 };
 
 
-module.exports.createUser = (event, context, callback) => {
+module.exports.createQuestion = (event, context, callback) => {
   let db = {};
   let data = {};
   let errs = {};
-  let user = {};
+  let question = {};
   const mongooseId = '_id';
 
   db = mongoose.connect(mongoString).connection;
 
   data = JSON.parse(event.body);
 
-  user = new UserModel({ name: data.name,
+  question = new Question({ name: data.name,
     firstname: data.firstname,
     birth: data.birth,
     city: data.city,
     ip: event.requestContext.identity.sourceIp });
 
-  errs = user.validateSync();
+  errs = question.validateSync();
 
   if (errs) {
     console.log(errs);
-    callback(null, createErrorResponse(400, 'Incorrect user data'));
+    callback(null, createErrorResponse(400, 'Incorrect question data'));
     db.close();
     return;
   }
 
 
   db.once('open', () => {
-    user
+    question
       .save()
       .then(() => {
-        callback(null, { statusCode: 200, body: JSON.stringify({ id: user[mongooseId] }) });
+        callback(null, { statusCode: 200, body: JSON.stringify({ id: question[mongooseId] }) });
       })
       .catch((err) => {
         callback(null, createErrorResponse(err.statusCode, err.message));
@@ -93,7 +93,7 @@ module.exports.createUser = (event, context, callback) => {
   });
 };
 
-module.exports.deleteUser = (event, context, callback) => {
+module.exports.deleteQuestion = (event, context, callback) => {
   const db = mongoose.connect(mongoString).connection;
   const id = event.pathParameters.id;
 
@@ -104,7 +104,7 @@ module.exports.deleteUser = (event, context, callback) => {
   }
 
   db.once('open', () => {
-    UserModel
+    Question
       .remove({ _id: event.pathParameters.id })
       .then(() => {
         callback(null, { statusCode: 200, body: JSON.stringify('Ok') });
@@ -118,12 +118,12 @@ module.exports.deleteUser = (event, context, callback) => {
   });
 };
 
-module.exports.updateUser = (event, context, callback) => {
+module.exports.updateQuestion = (event, context, callback) => {
   const db = mongoose.connect(mongoString).connection;
   const data = JSON.parse(event.body);
   const id = event.pathParameters.id;
   let errs = {};
-  let user = {};
+  let question = {};
 
   if (!validator.isAlphanumeric(id)) {
     callback(null, createErrorResponse(400, 'Incorrect id'));
@@ -131,14 +131,14 @@ module.exports.updateUser = (event, context, callback) => {
     return;
   }
 
-  user = new UserModel({ _id: id,
+  question = new Question({ _id: id,
     name: data.name,
     firstname: data.firstname,
     birth: data.birth,
     city: data.city,
     ip: event.requestContext.identity.sourceIp });
 
-  errs = user.validateSync();
+  errs = question.validateSync();
 
   if (errs) {
     callback(null, createErrorResponse(400, 'Incorrect parameter'));
@@ -147,8 +147,8 @@ module.exports.updateUser = (event, context, callback) => {
   }
 
   db.once('open', () => {
-    // UserModel.save() could be used too
-    UserModel.findByIdAndUpdate(id, user)
+    // Question.save() could be used too
+    Question.findByIdAndUpdate(id, question)
       .then(() => {
         callback(null, { statusCode: 200, body: JSON.stringify('Ok') });
       })

@@ -3,46 +3,28 @@ const validator = require('validator');
 
 
 const model = mongoose.model('User', {
-  name: {
+  question: {
+    type: String,
+    required: true,
+  },
+  answer: {
     type: String,
     required: true,
     validate: {
-      validator(name) {
-        return validator.isAlphanumeric(name);
+      validator(answer) {
+        return validator.isNumeric(answer);
       },
     },
   },
-  firstname: {
+  distractors: [{
     type: String,
     required: true,
     validate: {
-      validator(firstname) {
-        return validator.isAlphanumeric(firstname);
-      },
+        validator(answer) {
+            return validator.isNumeric(answer);
+        },
     },
-  },
-  birth: {
-    type: Date,
-    required: true,
-  },
-  city: {
-    type: String,
-    required: true,
-    validate: {
-      validator(city) {
-        return validator.isAlphanumeric(city);
-      },
-    },
-  },
-  ip: {
-    type: String,
-    required: true,
-    validate: {
-      validator(ip) {
-        return validator.isIP(ip);
-      },
-    },
-  },
+  }],
 });
 
 module.exports = model;
