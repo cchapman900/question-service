@@ -1,109 +1,209 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: Swagger Petstore
-  license:
-    name: MIT
+  title: Question Service API
+  description: |
+    A service for basic CRUD operations for questions
+  contact:
+    name: Chris
+    email: chrischapman900@gmail.com
+    url: http://chrischapman.co
 servers:
-  - url: http://petstore.swagger.io/v1
+  - url: TODO
 paths:
-  /pets:
+  /questions:
     get:
-      summary: List all pets
-      operationId: listPets
+      summary: List Questions
+      description: List all questions. Optional pagination variables.
       tags:
-        - pets
+        - Question
+      operationId: listQuestions
       parameters:
-        - name: limit
+        - name: _limit
           in: query
-          description: How many items to return at one time (max 100)
+          description: maximum number of results to return
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _page
+          in: query
+          description: pagination index
           required: false
           schema:
             type: integer
             format: int32
       responses:
         '200':
-          description: An paged array of pets
-          headers:
-            x-next:
-              description: A link to the next page of responses
-              schema:
-                type: string
+          description: A list of questions
           content:
-            application/json:    
+            application/json:
               schema:
-                $ref: "#/components/schemas/Pets"
+                type: array
+                items:
+                  $ref: '#/components/schemas/Question'
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     post:
-      summary: Create a pet
-      operationId: createPets
+      summary: Create Question
+      description: Creates a new question
       tags:
-        - pets
+        - Question
+      operationId: createQuestion
+      requestBody:
+        description: Question to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewQuestion'
       responses:
         '201':
-          description: Null response
+          description: Project created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '400':
+          description: Invalid content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-  /pets/{petId}:
+                $ref: '#/components/schemas/Error'
+  /question/{question_id}:
+    parameters:
+      - name: question_id
+        in: path
+        description: ID of Question
+        required: true
+        schema:
+          type: string
+          format: ObjectId
+          example: "507f1f77bcf86cd799439011"
     get:
-      summary: Info for a specific pet
-      operationId: showPetById
+      summary: 'TODO: Get Question'
+      description: Returns an individual question based on its ID
       tags:
-        - pets
-      parameters:
-        - name: petId
-          in: path
-          required: true
-          description: The id of the pet to retrieve
-          schema:
-            type: string
+        - Question
+      operationId: getQuestion
       responses:
         '200':
-          description: Expected response to a valid request
+          description: question response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pets"
+                $ref: '#/components/schemas/Question'
+        '404':
+          description: Question not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update Question
+      description: Update an existing question
+      tags:
+        - Question
+      operationId: updateQuestion
+      requestBody:
+        description: Question to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewQuestion'
+      responses:
+        '200':
+          description: Question updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '400':
+          description: Invalid content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete Question
+      description: Deletes a single question based on the ID supplied
+      tags:
+        - Question
+      operationId: deleteQuestion
+      responses:
+        '204':
+          description: Question deleted
+        '404':
+          description: Question not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Pet:
-      required:
-        - id
-        - name
+    NewQuestion:
       properties:
-        id:
-          type: integer
-          format: int64
-        name:
+        question:
           type: string
-        tag:
+          description: 'The initial question'
+          example: 'What is 1754 - 3936?'
+        answer:
           type: string
-    Pets:
-      type: array
-      items:
-        $ref: "#/components/schemas/Pet"
+          description: 'The correct answer'
+          example: '-2182'
+        distractors:
+          type: array
+          description: 'Wrong answers'
+          items:
+            type: string
+            example: '3176'
+      required:
+        - question
+        - answer
+        - distractors
+    Question:
+      allOf:
+        - $ref: '#/components/schemas/NewQuestion'
+      properties:
+        _id:
+          type: string
+          format: ObjectId
+          example: '507f1f77bcf86cd799439011'
+      required:
+        - _id
     Error:
       required:
-        - code
         - message
       properties:
-        code:
-          type: integer
-          format: int32
         message:
           type: string
+          example: "An unexpected error occured"
