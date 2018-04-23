@@ -1,0 +1,120 @@
+{
+	"info": {
+		"_postman_id": "ce5dade5-2512-41f1-995c-61c227cd805b",
+		"name": "Questions",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List Questions",
+			"description": "",
+			"item": [
+				{
+					"name": "List Questions (success)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d4e509d4-bba8-4ca0-b331-e7afa0d2961d",
+								"type": "text/javascript",
+								"exec": [
+									"var questionSchema = {",
+									"    \"_id\": {",
+									"        \"type\": \"string\"",
+									"    },",
+									"    \"question\": {",
+									"        \"type\": \"string\"",
+									"    },",
+									"    \"answer\": {",
+									"        \"type\": \"string\"",
+									"    },",
+									"    \"distractors\": {",
+									"        \"type\": \"array\"",
+									"    }",
+									"};",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Default limit works\", function () {",
+									"    pm.expect(jsonData.length).to.eql(10);",
+									"});",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"  pm.expect(tv4.validate(jsonData[0], questionSchema)).to.be.true;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{domain}}/questions",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"questions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Questions with pagination (success)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1f910be1-ee1a-4782-8436-a69748dd1507",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Limit works\", function () {",
+									"    pm.expect(jsonData.length).to.eql(5);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{domain}}/questions?limit=5&offset=3",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"questions"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "offset",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

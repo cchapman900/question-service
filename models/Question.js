@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 
-const model = mongoose.model('User', {
+const model = mongoose.model('Question', {
   question: {
     type: String,
     required: true,

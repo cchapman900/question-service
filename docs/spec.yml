@@ -19,14 +19,14 @@ paths:
         - Question
       operationId: listQuestions
       parameters:
-        - name: _limit
+        - name: limit
           in: query
           description: maximum number of results to return
           required: false
           schema:
             type: integer
             format: int32
-        - name: _page
+        - name: page
           in: query
           description: pagination index
           required: false

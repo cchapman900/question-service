@@ -8,12 +8,11 @@ provider:
     JWKS_URI: ${file(./config.yml):JWKS_URI}
     AUDIENCE: ${file(./config.yml):AUDIENCE}
     TOKEN_ISSUER: ${file(./config.yml):TOKEN_ISSUER}
-    API_GATEWAY_ARN: ${file(./config.yml):API_GATEWAY_ARN}
 
 functions:
 
   getQuestions:
-    handler: handler.getQuestion
+    handler: handler.getQuestions
     events:
       - http:
           path: questions

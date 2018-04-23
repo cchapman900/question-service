@@ -8,7 +8,14 @@ Using Mongoose ODM and Bluebird for Promises.
 
 - NoSQL CRUD API
 
-## Auth0 Setup
+## Requirements
+- Auth0
+- Serverless
+
+### Auth0 Setup
+See [this guide](https://auth0.com/docs/integrations/aws-api-gateway/custom-authorizers)
+
+### Serverless
 See [this guide](https://auth0.com/docs/integrations/aws-api-gateway/custom-authorizers)
 
 ## Application Setup

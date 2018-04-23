@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bluebird = require('bluebird');
 const validator = require('validator');
-const Question = require('./model/Question.js');
+const Question = require('./models/Question.js');
 const auth = require('./auth');
 
 mongoose.Promise = bluebird;
@@ -14,6 +14,12 @@ const createErrorResponse = (statusCode, message) => ({
   body: {'message': message} || {'message': 'An unexpected error occured'},
 });
 
+const createSuccessResponse = (statusCode, body) => ({
+    statusCode: statusCode || 200,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+});
+
 module.exports.authenticate = function (event, context) {
     auth.authenticate(event, function (err, data) {
         if (err) {
@@ -21,6 +27,30 @@ module.exports.authenticate = function (event, context) {
             context.fail("Unauthorized");
         }
         else context.succeed(data);
+    });
+};
+
+module.exports.getQuestions = (event, context, callback) => {
+    const db = mongoose.connect(mongoString).connection;
+    const queryStringParameters = event.queryStringParameters || {};
+    const limit = +queryStringParameters.limit || 10;
+    const offset = +queryStringParameters.offset || 0;
+
+    db.once('open', () => {
+        Question
+            .find()
+            .skip(offset)
+            .limit(limit)
+            .then((questions) => {
+                callback(null, createSuccessResponse(200, questions));
+            })
+            .catch((err) => {
+                callback(null, createErrorResponse(err.statusCode, err.message));
+            })
+            .finally(() => {
+                // Close db connection or node event loop won't exit , and lambda will timeout
+                db.close();
+            });
     });
 };
 
