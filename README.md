@@ -24,7 +24,7 @@ Rename `example.config.yml` to `config.yml` and add your MongoDB Atlas connectio
 
 In `handler.js` update the `mongoString` with your mongoDB url.
 
-### /questions
+### GET /questions
 **List Projects**
 
 *query parameters*
@@ -55,7 +55,7 @@ In `handler.js` update the `mongoString` with your mongoDB url.
 ]
 ```
 
-### /questions/{question_id}
+### GET /questions/{question_id}
 **Get Project**
 
 *path parameters*
@@ -67,6 +67,40 @@ In `handler.js` update the `mongoString` with your mongoDB url.
     "_id": "5adc372941a60b6d03e72d1f",
     "question": "What is 6324 * 4040?",
     "answer": "25548960",
+    "distractors": [
+        "3952",
+        "3906",
+        "2694"
+    ]
+}
+```
+
+### POST /questions/{question_id}
+**Create Project**
+
+*path parameters*
+- question_id: ObjectID
+
+*request body*
+```json
+{
+    "question": "What is 6324 * 4040?",
+    "answer": "25548960",
+    "distractors": [
+        "3952",
+        "3906",
+        "2694"
+    ]
+}
+```
+
+*response*
+```json
+{
+    "__v": 0,
+    "question": "What is 1754 - 3936?",
+    "answer": "-2182",
+    "_id": "5add5c68cc90baab0f818ed5",
     "distractors": [
         "3952",
         "3906",

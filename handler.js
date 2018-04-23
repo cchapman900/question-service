@@ -30,6 +30,14 @@ module.exports.authenticate = function (event, context) {
     });
 };
 
+
+/**
+ * LIST QUESTIONS
+ *
+ * @param event
+ * @param context
+ * @param callback
+ */
 module.exports.getQuestions = (event, context, callback) => {
     const db = mongoose.connect(mongoString).connection;
     const queryStringParameters = event.queryStringParameters || {};
@@ -54,6 +62,14 @@ module.exports.getQuestions = (event, context, callback) => {
     });
 };
 
+
+/**
+ * GET QUESTION
+ *
+ * @param event
+ * @param context
+ * @param callback
+ */
 module.exports.getQuestion = (event, context, callback) => {
     const db = mongoose.connect(mongoString).connection;
     const question_id = event.pathParameters.question_id;
@@ -85,26 +101,24 @@ module.exports.getQuestion = (event, context, callback) => {
 };
 
 
+/**
+ * CREATE QUESTION
+ *
+ * @param event
+ * @param context
+ * @param callback
+ */
 module.exports.createQuestion = (event, context, callback) => {
-    let db = {};
-    let data = {};
-    let errs = {};
-    let question = {};
-    const mongooseId = '_id';
+    const db = mongoose.connect(mongoString).connection;
+    let data = JSON.parse(event.body);
 
-    db = mongoose.connect(mongoString).connection;
-
-    data = JSON.parse(event.body);
-
-    question = new Question({
-        name: data.name,
-        firstname: data.firstname,
-        birth: data.birth,
-        city: data.city,
-        ip: event.requestContext.identity.sourceIp
+    const question = new Question({
+        question: data.question,
+        answer: data.answer,
+        distractors: data.distractors
     });
 
-    errs = question.validateSync();
+    const errs = question.validateSync();
 
     if (errs) {
         console.log(errs);
@@ -118,7 +132,7 @@ module.exports.createQuestion = (event, context, callback) => {
         question
             .save()
             .then(() => {
-                callback(null, {statusCode: 200, body: JSON.stringify({id: question[mongooseId]})});
+                callback(null, {statusCode: 201, body: JSON.stringify(question)});
             })
             .catch((err) => {
                 callback(null, createErrorResponse(err.statusCode, err.message));
@@ -129,31 +143,13 @@ module.exports.createQuestion = (event, context, callback) => {
     });
 };
 
-module.exports.deleteQuestion = (event, context, callback) => {
-    const db = mongoose.connect(mongoString).connection;
-    const id = event.pathParameters.id;
 
-    if (!validator.isAlphanumeric(id)) {
-        callback(null, createErrorResponse(400, 'Incorrect id'));
-        db.close();
-        return;
-    }
-
-    db.once('open', () => {
-        Question
-            .remove({_id: event.pathParameters.id})
-            .then(() => {
-                callback(null, {statusCode: 200, body: JSON.stringify('Ok')});
-            })
-            .catch((err) => {
-                callback(null, createErrorResponse(err.statusCode, err.message));
-            })
-            .finally(() => {
-                db.close();
-            });
-    });
-};
-
+/** UPDATE QUESTION
+ *
+ * @param event
+ * @param context
+ * @param callback
+ */
 module.exports.updateQuestion = (event, context, callback) => {
     const db = mongoose.connect(mongoString).connection;
     const data = JSON.parse(event.body);
@@ -192,6 +188,38 @@ module.exports.updateQuestion = (event, context, callback) => {
             })
             .catch((err) => {
                 callback(err, createErrorResponse(err.statusCode, err.message));
+            })
+            .finally(() => {
+                db.close();
+            });
+    });
+};
+
+
+/** DELETE QUESTION
+ *
+ * @param event
+ * @param context
+ * @param callback
+ */
+module.exports.deleteQuestion = (event, context, callback) => {
+    const db = mongoose.connect(mongoString).connection;
+    const id = event.pathParameters.id;
+
+    if (!validator.isAlphanumeric(id)) {
+        callback(null, createErrorResponse(400, 'Incorrect id'));
+        db.close();
+        return;
+    }
+
+    db.once('open', () => {
+        Question
+            .remove({_id: event.pathParameters.id})
+            .then(() => {
+                callback(null, {statusCode: 200, body: JSON.stringify('Ok')});
+            })
+            .catch((err) => {
+                callback(null, createErrorResponse(err.statusCode, err.message));
             })
             .finally(() => {
                 db.close();
