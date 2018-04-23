@@ -1,4 +1,4 @@
-service: question-service
+service: questions-service
 
 provider:
   name: aws
@@ -23,7 +23,7 @@ functions:
     handler: handler.getQuestion
     events:
       - http:
-          path: user/{id}
+          path: questions/{question_id}
           method: get
           cors: true
 
@@ -45,7 +45,7 @@ functions:
     handler: handler.updateQuestion
     events:
       - http:
-          path: questions/{id}
+          path: questions/{question_id}
           method: put
           cors: true
 
@@ -53,7 +53,7 @@ functions:
     handler: handler.deleteQuestion
     events:
       - http:
-          path: questions/{id}
+          path: questions/{question_id}
           method: delete
           cors: true
 

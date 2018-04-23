@@ -1,12 +1,5 @@
-# Serverless MongoDB Rest API with Mongoose and Bluebird Promises
-
-This example demonstrate how to use a MongoDB database with aws and serverless.
-
-Using Mongoose ODM and Bluebird for Promises.
-
-## Use Cases
-
-- NoSQL CRUD API
+# Question Service API
+A service for basic CRUD operations for questions
 
 ## Requirements
 - Auth0
@@ -31,59 +24,53 @@ Rename `example.config.yml` to `config.yml` and add your MongoDB Atlas connectio
 
 In `handler.js` update the `mongoString` with your mongoDB url.
 
-*Create*
+### /questions
+**List Projects**
 
-```bash
-curl -XPOST -H "Content-type: application/json" -d '{
-   "name" : "John",
-   "firstname" : "Doe",
-   "city" : "Toronto",
-   "birth" : "01/01/1990"
-}' 'https://2c8cx5whk0.execute-api.us-east-1.amazonaws.com/dev/user/'
-```
-```json
-{"id": "590b52ff086041000142cedd"}
-```
+*query parameters*
+- limit: Integer
+- offset: Integer
 
-*READ*
-
-```bash
-curl -XGET -H "Content-type: application/json" 'https://2c8cx5whk0.execute-api.us-east-1.amazonaws.com/dev/user/590b52ff086041000142cedd'
-```
+*response:*
 ```json
 [
-  {
-    "_id": "5905e2fbdb55f20001334b3e",
-    "name": "John",
-    "firstname": "Doe",
-    "birth": null,
-    "city": "Toronto",
-    "ip": "01/01/1990",
-    "__v": 0
-  }
+    {
+        "_id": "5adc372941a60b6d03e72d1f",
+        "question": "What is 6324 * 4040?",
+        "answer": "25548960",
+        "distractors": [
+            "3952",
+            "3906",
+            "2694"
+        ]
+    },
+    {
+        "_id": "5adc372941a60b6d03e72d20",
+        "question": "What is 7269 * 2771?",
+        "answer": "20142399",
+        "distractors": [
+            "874"
+        ]
+    }
 ]
 ```
 
-*UPDATE*
+### /questions/{question_id}
+**Get Project**
 
-```bash
-curl -XPUT -H "Content-type: application/json" -d '{
-   "name" : "William",
-   "firstname" : "Smith",
-   "city" : "Miami",
-   "birth" : "01/01/2000"
-}' 'https://2c8cx5whk0.execute-api.us-east-1.amazonaws.com/dev/user/590b52ff086041000142cedd'
-```
+*path parameters*
+- question_id: ObjectID
+
+*response*
 ```json
-"Ok"
-```
-
-*DELETE*
-
-```bash
-curl -XDELETE -H "Content-type: application/json" 'https://2c8cx5whk0.execute-api.us-east-1.amazonaws.com/dev/user/590b52ff086041000142cedd'
-```
-
-```json
-"Ok"
+{
+    "_id": "5adc372941a60b6d03e72d1f",
+    "question": "What is 6324 * 4040?",
+    "answer": "25548960",
+    "distractors": [
+        "3952",
+        "3906",
+        "2694"
+    ]
+}
 ```

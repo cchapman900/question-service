@@ -115,6 +115,101 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Get Question",
+			"description": "",
+			"item": [
+				{
+					"name": "Get Question (success)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b4d26522-b66c-47c8-a385-cd4c76fc07c1",
+								"type": "text/javascript",
+								"exec": [
+									"var questionSchema = {",
+									"    \"_id\": {",
+									"        \"type\": \"string\"",
+									"    },",
+									"    \"question\": {",
+									"        \"type\": \"string\"",
+									"    },",
+									"    \"answer\": {",
+									"        \"type\": \"string\"",
+									"    },",
+									"    \"distractors\": {",
+									"        \"type\": \"array\"",
+									"    }",
+									"};",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"  pm.expect(tv4.validate(jsonData, questionSchema)).to.be.true;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{domain}}/questions/{{question_id}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"questions",
+								"{{question_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Question (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e06f5b87-4a19-441b-a05f-5218314960ed",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{domain}}/questions/5adc372941a60b6d02e72d1d",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"questions",
+								"5adc372941a60b6d02e72d1d"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
