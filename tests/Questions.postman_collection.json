@@ -456,6 +456,69 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "Delete Question",
+			"description": "",
+			"item": [
+				{
+					"name": "Delete Question (success)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3e1b5c5c-81a6-456c-b563-1a14c89eaa82",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{domain}}/questions/{{temp_question_id}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"questions",
+								"{{temp_question_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5e60a3c7-9d81-4b95-9c17-a243466336f8",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8d28b4b8-3f5a-43a8-96d6-55c624cc1559",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
 		}
 	]
 }

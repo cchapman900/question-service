@@ -142,3 +142,14 @@ In `handler.js` update the `mongoString` with your mongoDB url.
     ]
 }
 ```
+
+### DELETE /questions/{question_id}
+**Delete Project**
+
+*path parameters*
+- question_id: ObjectID
+
+*response*
+```
+No content
+```
