@@ -55,6 +55,25 @@ In `handler.js` update the `mongoString` with your mongoDB url.
 ]
 ```
 
+### POST /questions
+**Create Project**
+
+*path parameters*
+- question_id: ObjectID
+
+*request body*
+```json
+{
+    "question": "What is 6324 * 4040?",
+    "answer": "25548960",
+    "distractors": [
+        "3952",
+        "3906",
+        "2694"
+    ]
+}
+```
+
 ### GET /questions/{question_id}
 **Get Project**
 
@@ -75,8 +94,23 @@ In `handler.js` update the `mongoString` with your mongoDB url.
 }
 ```
 
-### POST /questions/{question_id}
-**Create Project**
+*response*
+```json
+{
+    "__v": 0,
+    "question": "What is 1754 - 3936?",
+    "answer": "-2182",
+    "_id": "5add5c68cc90baab0f818ed5",
+    "distractors": [
+        "3952",
+        "3906",
+        "2694"
+    ]
+}
+```
+
+### PUT /questions/{question_id}
+**Update Project**
 
 *path parameters*
 - question_id: ObjectID

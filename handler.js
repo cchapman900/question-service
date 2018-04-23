@@ -132,7 +132,7 @@ module.exports.createQuestion = (event, context, callback) => {
         question
             .save()
             .then(() => {
-                callback(null, {statusCode: 201, body: JSON.stringify(question)});
+                callback(null, createSuccessResponse(201, question));
             })
             .catch((err) => {
                 callback(null, createErrorResponse(err.statusCode, err.message));
@@ -152,39 +152,34 @@ module.exports.createQuestion = (event, context, callback) => {
  */
 module.exports.updateQuestion = (event, context, callback) => {
     const db = mongoose.connect(mongoString).connection;
-    const data = JSON.parse(event.body);
-    const id = event.pathParameters.id;
-    let errs = {};
-    let question = {};
+    const question_id = event.pathParameters.question_id;
+    let data = JSON.parse(event.body);
 
-    if (!validator.isAlphanumeric(id)) {
-        callback(null, createErrorResponse(400, 'Incorrect id'));
+    if (!mongoose.Types.ObjectId.isValid(question_id)) {
+        callback(null, createErrorResponse(400, 'Invalid id'));
         db.close();
         return;
     }
 
-    question = new Question({
-        _id: id,
-        name: data.name,
-        firstname: data.firstname,
-        birth: data.birth,
-        city: data.city,
-        ip: event.requestContext.identity.sourceIp
+    const question = new Question({
+        _id: question_id,
+        question: data.question,
+        answer: data.answer,
+        distractors: data.distractors
     });
 
     errs = question.validateSync();
 
     if (errs) {
-        callback(null, createErrorResponse(400, 'Incorrect parameter'));
+        callback(null, createErrorResponse(400, 'Incorrect parameters'));
         db.close();
         return;
     }
 
     db.once('open', () => {
-        // Question.save() could be used too
-        Question.findByIdAndUpdate(id, question)
-            .then(() => {
-                callback(null, {statusCode: 200, body: JSON.stringify('Ok')});
+        Question.findByIdAndUpdate(question_id, question)
+            .then((question) => {
+                callback(null, createSuccessResponse(200, question));
             })
             .catch((err) => {
                 callback(err, createErrorResponse(err.statusCode, err.message));
@@ -204,19 +199,19 @@ module.exports.updateQuestion = (event, context, callback) => {
  */
 module.exports.deleteQuestion = (event, context, callback) => {
     const db = mongoose.connect(mongoString).connection;
-    const id = event.pathParameters.id;
+    const question_id = event.pathParameters.question_id;
 
-    if (!validator.isAlphanumeric(id)) {
-        callback(null, createErrorResponse(400, 'Incorrect id'));
+    if (!mongoose.Types.ObjectId.isValid(question_id)) {
+        callback(null, createErrorResponse(400, 'Invalid id'));
         db.close();
         return;
     }
 
     db.once('open', () => {
         Question
-            .remove({_id: event.pathParameters.id})
+            .remove({_id: question_id})
             .then(() => {
-                callback(null, {statusCode: 200, body: JSON.stringify('Ok')});
+                callback(null, createSuccessResponse(204));
             })
             .catch((err) => {
                 callback(null, createErrorResponse(err.statusCode, err.message));

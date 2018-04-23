@@ -221,7 +221,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "39d82453-a620-4c09-b457-4632bdff275c",
+								"id": "2cce3efe-619a-40df-8a46-a886292ab318",
 								"type": "text/javascript",
 								"exec": [
 									"var questionSchema = {",
@@ -241,7 +241,7 @@
 									"",
 									"var jsonData = pm.response.json();",
 									"",
-									"pm.test(\"Status code is 201\", function () {",
+									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
@@ -319,6 +319,141 @@
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update Question",
+			"description": "",
+			"item": [
+				{
+					"name": "Update Question (success)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1ac2c8df-6bf8-471d-b89c-37e354d72ab9",
+								"type": "text/javascript",
+								"exec": [
+									"var questionSchema = {",
+									"    \"_id\": {",
+									"        \"type\": \"string\"",
+									"    },",
+									"    \"question\": {",
+									"        \"type\": \"string\"",
+									"    },",
+									"    \"answer\": {",
+									"        \"type\": \"string\"",
+									"    },",
+									"    \"distractors\": {",
+									"        \"type\": \"array\"",
+									"    }",
+									"};",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"  pm.expect(tv4.validate(jsonData, questionSchema)).to.be.true;",
+									"});",
+									"",
+									"pm.environment.set(\"temp_question_id\", jsonData._id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"What is 1754 - 3936?\",\n  \"answer\": \"-2182\",\n  \"distractors\": [\n    \"3176\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{domain}}/questions/{{temp_question_id}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"questions",
+								"{{temp_question_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Question (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0e65ed27-13d7-4bfc-acea-2d1b48e1e9a8",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"invalid\": \"invalid\"\n}"
+						},
+						"url": {
+							"raw": "{{domain}}/questions/{{temp_question_id}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"questions",
+								"{{temp_question_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9730b036-269e-45ed-9ddc-c9504fcc6c62",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e6f32c84-c459-4f6a-be26-4eebf155f66c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		}
