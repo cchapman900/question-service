@@ -10,13 +10,20 @@ const mongoString = process.env.MONGO_URI;
 
 const createErrorResponse = (statusCode, message) => ({
     statusCode: statusCode || 500,
-    headers: {'Content-Type': 'application/json'},
+    headers: {
+        "Access-Control-Allow-Origin" : "*",
+        "Access-Control-Allow-Credentials" : true,
+        'Content-Type': 'application/json'},
     body: JSON.stringify({'message': message}) || JSON.stringify({'message': 'An unexpected error occured'}),
 });
 
 const createSuccessResponse = (statusCode, body) => ({
     statusCode: statusCode || 200,
-    headers: {'Content-Type': 'application/json'},
+    headers: {
+        "Access-Control-Allow-Origin" : "*",
+        "Access-Control-Allow-Credentials" : true,
+        'Content-Type': 'application/json'
+    },
     body: JSON.stringify(body)
 });
 
