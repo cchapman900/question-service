@@ -1,6 +1,9 @@
 # Question Service API
 A service for basic CRUD operations for questions
 
+### API URL:
+https://zzch3oyp2b.execute-api.us-east-1.amazonaws.com/dev
+
 ## Requirements
 - Auth0
 - Serverless
@@ -20,11 +23,9 @@ serverless deploy
 
 Rename `example.config.yml` to `config.yml` and add your MongoDB Atlas connection string to the `MONGO_URI` property
 
-## Usage
+## Endpoints
 
-In `handler.js` update the `mongoString` with your mongoDB url.
-
-### GET /questions
+### GET [/questions](https://zzch3oyp2b.execute-api.us-east-1.amazonaws.com/dev/questions)
 **List Projects**
 
 *query parameters*
@@ -74,7 +75,7 @@ In `handler.js` update the `mongoString` with your mongoDB url.
 }
 ```
 
-### GET /questions/{question_id}
+### GET [/questions/{question_id}](https://zzch3oyp2b.execute-api.us-east-1.amazonaws.com/dev/questions/5adc372941a60b6d03e72d1c)
 **Get Project**
 
 *path parameters*
